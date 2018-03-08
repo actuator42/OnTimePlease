@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<Pane fx:controller="com.actuator.ui.controller.ImportDialogController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="686.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextArea fx:id="importArea" layoutX="14.0" layoutY="14.0" prefHeight="338.0" prefWidth="657.0" />
+      <Button fx:id="importBtn" layoutX="613.0" layoutY="359.0" mnemonicParsing="false" text="import" onAction="#importButtonClick"/>
+   </children>
+</Pane>

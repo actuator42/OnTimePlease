@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane fx:controller="com.actuator.ui.controller.InfomationController" prefHeight="298.0" prefWidth="499.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fx:id="logo" fitHeight="150.0" fitWidth="200.0" layoutX="150.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <Label layoutX="72.0" layoutY="187.0" text="source" />
+      <Hyperlink layoutX="120.0" layoutY="183.0" text="https://github.com/actuator42/OnTimePlease.git" />
+   </children>
+</AnchorPane>
