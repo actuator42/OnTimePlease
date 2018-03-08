@@ -15,7 +15,7 @@ public class ImportDialogController {
 
     public void importButtonClick(ActionEvent actionEvent) {
         dataList.clear();
-        for (String element : importArea.getText().split(System.lineSeparator())) {
+        for (String element : importArea.getText().split("\\n")) {
             dataList.add(new DayInfo(element));
         }
         MainController.getInstance().summeryTime(dataList);

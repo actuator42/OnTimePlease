@@ -9,6 +9,6 @@
    <children>
       <ImageView fx:id="logo" fitHeight="150.0" fitWidth="200.0" layoutX="150.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="72.0" layoutY="187.0" text="source" />
-      <Hyperlink layoutX="120.0" layoutY="183.0" text="https://github.com/actuator42/OnTimePlease.git" />
+      <Hyperlink fx:id="linker" layoutX="120.0" layoutY="183.0" text="https://github.com/actuator42/OnTimePlease.git" />
    </children>
 </AnchorPane>

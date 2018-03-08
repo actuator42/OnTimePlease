@@ -7,8 +7,10 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 
 public class DayInfo {
+    private String[] HolidayStatus = {"휴일", "연차휴가", "공가", "외근", "교육(사내)", "교육(사외)", "출장"};
     private DateTimeFormatter PATTERN = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
     private SimpleStringProperty index;
     private SimpleStringProperty day;
@@ -20,7 +22,7 @@ public class DayInfo {
     private Duration workTimeDuration;
 
     public enum Element {
-        index(0), date(1), dayType(2), getTheWork(6), status(7), leaveTheWork(9), workTime(11);
+        index(0), date(1), dayType(2), dayStatus(4), getTheWork(6), status(7), leaveTheWork(9), workTime(11);
         private int order;
 
         Element(int order) {
@@ -29,14 +31,6 @@ public class DayInfo {
 
         public int getOrder() {
             return order;
-        }
-
-        public static String getTableOrder(int num) {
-            for (Element e : Element.values()) {
-                if (e.ordinal() == num)
-                    return e.name();
-            }
-            return "None";
         }
     }
 
@@ -59,17 +53,21 @@ public class DayInfo {
         }
     }
 
-    public void setValuesAtColumns(String columnName, String newValue) {
+    public void updateValuesAtColumns(String columnName, String newValue) {
         if (columnName.equals("IN"))
             columnName = "getTheWork";
         else if (columnName.equals("OUT"))
             columnName = "leaveTheWork";
+        else if (columnName.equals("DayType"))
+            columnName = "dayType";
         switch (Element.valueOf(columnName)) {
             case date:
                 day.setValue(newValue);
                 break;
+            case dayStatus:
             case dayType:
-                dayType.setValue(newValue);
+                if (newValue.length() > 0)
+                    dayType.setValue(newValue);
                 break;
             case getTheWork:
                 getTheWork.setValue(dateTimeParse(newValue));
@@ -88,10 +86,16 @@ public class DayInfo {
             } else if (workTimeDuration.toHours() >= 4) {
                 workTimeDuration = workTimeDuration.minusMinutes(30);
             }
+            if (isHalfRest())
+                workTimeDuration = workTimeDuration.plusHours(4);
         } else {
             workTimeDuration = Duration.ofSeconds(0).plusHours(8);
         }
         workTime.setValue(getCalculateTime());
+    }
+
+    private boolean isHalfRest() {
+        return dayType.getValue().contains("반차") || dayType.getValue().contains("반일");
     }
 
     private String getCalculateTime() {
@@ -107,8 +111,13 @@ public class DayInfo {
             case index:
                 this.index = new SimpleStringProperty(s);
                 break;
+            case dayStatus:
             case dayType:
-                this.dayType = new SimpleStringProperty(s);
+                if (dayType == null)
+                    this.dayType = new SimpleStringProperty(s);
+                else if (s.length() > 0) {
+                    dayType.setValue(s);
+                }
                 break;
             case getTheWork:
                 if (s.length() == 0)
@@ -154,7 +163,7 @@ public class DayInfo {
     }
 
     public boolean isHolidays() {
-        return dayType.getValue().equals("휴일");
+        return Arrays.asList(HolidayStatus).contains(dayType.getValue()) || dayType.getValue().contains("휴가");
     }
 
     public void setIndex(String index) {

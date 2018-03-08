@@ -1,7 +1,7 @@
 package com.actuator.ui.controller;
 
-import com.actuator.ui.model.EditCell;
 import com.actuator.ui.model.DayInfo;
+import com.actuator.ui.model.EditCell;
 import com.actuator.ui.view.ImportDialog;
 import com.actuator.ui.view.InfoDialog;
 import javafx.collections.ObservableList;
@@ -41,6 +41,7 @@ public class MainController implements Initializable {
     public Button minus;
     public Button refresh;
 
+    private Duration workOnWeekTime = Duration.ofHours(40);
     private Thread thread;
 
     @Override
@@ -65,11 +66,14 @@ public class MainController implements Initializable {
             double progress = newValue == null ? 0 : newValue.doubleValue();
             if (progress >= 1) {
                 progressBar.setStyle("-fx-accent: red;");
-            } else {
+            } else if (progress > 0.5) {
+                progressBar.setStyle("-fx-accent: #43ff88;");
+            } else if (progress > 0.8) {
                 progressBar.setStyle("-fx-accent: #6487ff;");
+            } else {
+                progressBar.setStyle("-fx-accent: #fdff60;");
             }
         });
-
     }
 
     private void setColumnFactoryAndAction(TableColumn<DayInfo, String> column, String columnName) {
@@ -79,7 +83,7 @@ public class MainController implements Initializable {
             if (event != null && event.getTablePosition() != null && event.getTableView() != null) {
                 DayInfo dayInfo = event.getTableView().getItems().get(event.getTablePosition().getRow());
                 String newValue = event.getNewValue();
-                dayInfo.setValuesAtColumns(event.getTablePosition().getTableColumn().getText(), newValue);
+                dayInfo.updateValuesAtColumns(event.getTablePosition().getTableColumn().getText(), newValue);
             }
         });
     }
@@ -99,29 +103,27 @@ public class MainController implements Initializable {
                     Duration now = Duration.between(startTime, LocalDateTime.now());
                     updateProgress(finalCumulative.toMinutes() + now.toMinutes(), 2400);
                     String v = String.format(
-                            "%d:%02d", (finalCumulative.getSeconds() + now.getSeconds()) / 3600,
-                            ((finalCumulative.getSeconds() + now.getSeconds()) % 3600) / 60);
+                            "%d:%02d", (now.plusSeconds(finalCumulative.getSeconds()).toHours()),
+                            (now.plusSeconds(finalCumulative.getSeconds()).toMinutes() % 60));
                     v+= " hours work a week\nweek remain " + getWeekRemain(now);
                     updateMessage(v);
                     try {
                         Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        Thread.interrupted();
-                        break;
+                    } catch (Exception e) {
                     }
                 }
-                return null;
             }
 
             private String getWeekRemain(Duration now) {
                 String v = String.format(
-                        "%d:%02d", ((2400 * 60) - finalCumulative.getSeconds() + now.getSeconds()) / 3600,
-                        (((2400 * 60) - finalCumulative.getSeconds() - now.getSeconds()) % 3600) / 60);
+                        "%d:%02d", workOnWeekTime.minus(now.plusSeconds(finalCumulative.getSeconds())).toHours(),
+                        workOnWeekTime.minus(now.plusSeconds(finalCumulative.getSeconds())).toHours() % 60);
                 if (v.contains(":-"))
                     return v.replace(":-", ":") + "\nAre you crazy?";
                 return v;
             }
         };
+        progressBar.progressProperty().unbind();
         progressBar.progressProperty().bind(task.progressProperty());
         total.textProperty().bind(task.messageProperty());
         if (thread != null)
