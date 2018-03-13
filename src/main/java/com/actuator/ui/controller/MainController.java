@@ -118,8 +118,12 @@ public class MainController implements Initializable {
                 String v = String.format(
                         "%d:%02d", workOnWeekTime.minus(now.plusSeconds(finalCumulative.getSeconds())).toHours(),
                         workOnWeekTime.minus(now.plusSeconds(finalCumulative.getSeconds())).toHours() % 60);
-                if (v.contains(":-"))
+                if (v.contains(":-")) {
+                    if (!v.startsWith("-")) {
+                        v += "-" + v;
+                    }
                     return v.replace(":-", ":") + "\nAre you crazy?";
+                }
                 return v;
             }
         };
