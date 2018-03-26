@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -7,9 +8,10 @@
     <children>
         <TableView fx:id="tableView" editable="true" layoutX="14.0" layoutY="251.0" prefHeight="280.0" prefWidth="880.0">
             <columns>
-                <TableColumn fx:id="indexCol" prefWidth="75.0" text="Index" />
-                <TableColumn fx:id="dateCol" prefWidth="194.0" text="Date" />
-                <TableColumn fx:id="dayCol" minWidth="148.0" prefWidth="148.0" text="DayType" />
+                <TableColumn fx:id="indexCol" prefWidth="57.0" text="Index" />
+                <TableColumn fx:id="dateCol" prefWidth="126.0" text="Date" />
+                <TableColumn fx:id="dayCol" minWidth="136.0" prefWidth="136.0" text="DayType" />
+                <TableColumn fx:id="dayTimeCol" prefWidth="108.0" text="DayTypeTime" />
                 <TableColumn fx:id="inCol" prefWidth="108.0" text="IN" />
                 <TableColumn fx:id="outCol" prefWidth="99.0" text="OUT" />
                 <TableColumn fx:id="workCol" prefWidth="116.0" text="WorkTime" />

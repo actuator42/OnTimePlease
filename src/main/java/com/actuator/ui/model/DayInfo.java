@@ -10,11 +10,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 public class DayInfo {
-    private String[] HolidayStatus = {"휴일", "연차휴가", "공가", "외근", "교육(사내)", "교육(사외)", "출장"};
+    private String[] HolidayStatus = {"휴일", "연차휴가", "공가", "교육(사내)", "교육(사외)", "출장(국내)", "출장(국외)"};
     private DateTimeFormatter PATTERN = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
     private SimpleStringProperty index;
     private SimpleStringProperty day;
     private SimpleStringProperty dayType;
+    private SimpleStringProperty dayTypeTime;
     private SimpleObjectProperty<LocalDateTime> getTheWork;
     private SimpleObjectProperty<LocalDateTime> leaveTheWork;
     private SimpleStringProperty status;
@@ -22,7 +23,7 @@ public class DayInfo {
     private Duration workTimeDuration;
 
     public enum Element {
-        index(0), date(1), dayType(2), dayStatus(4), getTheWork(6), status(7), leaveTheWork(9), workTime(11);
+        index(0), date(1), dayType(2), dayStatus(4), dayTypeTime(5), getTheWork(6), status(7), leaveTheWork(9), workTime(11);
         private int order;
 
         Element(int order) {
@@ -60,6 +61,8 @@ public class DayInfo {
             columnName = "leaveTheWork";
         else if (columnName.equals("DayType"))
             columnName = "dayType";
+        else if (columnName.equals("DayTypeTime"))
+            columnName = "dayTypeTime";
         switch (Element.valueOf(columnName)) {
             case date:
                 day.setValue(newValue);
@@ -69,10 +72,17 @@ public class DayInfo {
                 if (newValue.length() > 0)
                     dayType.setValue(newValue);
                 break;
+            case dayTypeTime:
+                dayTypeTime.setValue(newValue);
+                break;
             case getTheWork:
+                if (newValue.split(":")[0].length() == 1)
+                    newValue = "0" + newValue;
                 getTheWork.setValue(dateTimeParse(newValue));
                 break;
             case leaveTheWork:
+                if (newValue.split(":")[0].length() == 1)
+                    newValue = "0" + newValue;
                 leaveTheWork.setValue(dateTimeParse(newValue));
                 break;
         }
@@ -88,10 +98,24 @@ public class DayInfo {
             }
             if (isHalfRest())
                 workTimeDuration = workTimeDuration.plusHours(4);
+            if (isExistDayTimeAndEquals("외근")) {
+                String raw = dayTypeTime.getValue();
+                if (raw.contains("."))
+                    raw = raw.replace(".", ":");
+                String[] v = raw.split(":");
+                workTimeDuration = workTimeDuration.plusHours(Long.parseLong(v[0]));
+                workTimeDuration = workTimeDuration.plusMinutes(Long.parseLong(v[1]));
+            }
         } else {
             workTimeDuration = Duration.ofSeconds(0).plusHours(8);
         }
         workTime.setValue(getCalculateTime());
+    }
+
+    private boolean isExistDayTimeAndEquals(String status) {
+        if (dayType.getValue().equals(status) && dayTypeTime.getValue() != null)
+            return true;
+        return false;
     }
 
     private boolean isHalfRest() {
@@ -119,9 +143,17 @@ public class DayInfo {
                     dayType.setValue(s);
                 }
                 break;
+            case dayTypeTime:
+                this.dayTypeTime = new SimpleStringProperty(s);
+                if (dayType.getValue().equals("외근")) {
+                    dayTypeTime.setValue(s);
+                }
+                break;
             case getTheWork:
                 if (s.length() == 0)
                     s = "00:00";
+                if (s.split(":")[0].length() == 1)
+                    s ="0" + s;
                 this.getTheWork = new SimpleObjectProperty<>(dateTimeParse(s));
                 break;
             case status:
@@ -130,6 +162,8 @@ public class DayInfo {
             case leaveTheWork:
                 if (s.length() == 0)
                     s = "00:00";
+                if (s.split(":")[0].length() == 1)
+                    s ="0" + s;
                 this.leaveTheWork = new SimpleObjectProperty<>(dateTimeParse(s));
                 break;
             case workTime:
@@ -224,5 +258,13 @@ public class DayInfo {
 
     public void setWorkTime(String workTime) {
         this.workTime.set(workTime);
+    }
+
+    public String getDayTypeTime() {
+        return dayTypeTime.get();
+    }
+
+    public void setDayTypeTime(String dayTypeTime) {
+        this.dayTypeTime.set(dayTypeTime);
     }
 }

@@ -27,6 +27,7 @@ public class MainController implements Initializable {
     public TableColumn<DayInfo, String> indexCol;
     public TableColumn<DayInfo, String> dateCol;
     public TableColumn<DayInfo, String> dayCol;
+    public TableColumn<DayInfo, String> dayTimeCol;
     public TableColumn<DayInfo, String> inCol;
     public TableColumn<DayInfo, String> outCol;
     public TableColumn<DayInfo, String> workCol;
@@ -57,6 +58,7 @@ public class MainController implements Initializable {
         setColumnFactoryAndAction(indexCol, "index");
         setColumnFactoryAndAction(dateCol, "day");
         setColumnFactoryAndAction(dayCol, "dayType");
+        setColumnFactoryAndAction(dayTimeCol, "dayTypeTime");
         setColumnFactoryAndAction(inCol, "getTheWork");
         setColumnFactoryAndAction(outCol, "leaveTheWork");
         setColumnFactoryAndAction(workCol, "workTime");
@@ -66,10 +68,10 @@ public class MainController implements Initializable {
             double progress = newValue == null ? 0 : newValue.doubleValue();
             if (progress >= 1) {
                 progressBar.setStyle("-fx-accent: red;");
-            } else if (progress > 0.5) {
-                progressBar.setStyle("-fx-accent: #43ff88;");
             } else if (progress > 0.8) {
                 progressBar.setStyle("-fx-accent: #6487ff;");
+            } else if (progress > 0.5) {
+                progressBar.setStyle("-fx-accent: #43ff88;");
             } else {
                 progressBar.setStyle("-fx-accent: #fdff60;");
             }
@@ -100,12 +102,12 @@ public class MainController implements Initializable {
             @Override public Void call() {
                 LocalDateTime startTime = LocalDateTime.now();
                 while (true) {
-                    Duration now = Duration.between(startTime, LocalDateTime.now());
-                    updateProgress(finalCumulative.toMinutes() + now.toMinutes(), 2400);
+                    Duration runningDuration = Duration.between(startTime, LocalDateTime.now());
+                    updateProgress(finalCumulative.toMinutes() + runningDuration.toMinutes(), 2400);
                     String v = String.format(
-                            "%d:%02d", (now.plusSeconds(finalCumulative.getSeconds()).toHours()),
-                            (now.plusSeconds(finalCumulative.getSeconds()).toMinutes() % 60));
-                    v+= " hours work a week\nweek remain " + getWeekRemain(now);
+                            "%d:%02d", (runningDuration.plusSeconds(finalCumulative.getSeconds()).toHours()),
+                            (runningDuration.plusSeconds(finalCumulative.getSeconds()).toMinutes() % 60));
+                    v+= " hours work a week\nweek remain " + getWeekRemain(runningDuration);
                     updateMessage(v);
                     try {
                         Thread.sleep(2000);
@@ -114,13 +116,13 @@ public class MainController implements Initializable {
                 }
             }
 
-            private String getWeekRemain(Duration now) {
+            private String getWeekRemain(Duration runningDuration) {
                 String v = String.format(
-                        "%d:%02d", workOnWeekTime.minus(now.plusSeconds(finalCumulative.getSeconds())).toHours(),
-                        workOnWeekTime.minus(now.plusSeconds(finalCumulative.getSeconds())).toHours() % 60);
+                        "%d:%02d", workOnWeekTime.minus(runningDuration.plusSeconds(finalCumulative.getSeconds())).toHours(),
+                        workOnWeekTime.minus(runningDuration.plusSeconds(finalCumulative.getSeconds())).toMinutes() % 60);
                 if (v.contains(":-")) {
                     if (!v.startsWith("-")) {
-                        v += "-" + v;
+                        v = "-" + v;
                     }
                     return v.replace(":-", ":") + "\nAre you crazy?";
                 }
