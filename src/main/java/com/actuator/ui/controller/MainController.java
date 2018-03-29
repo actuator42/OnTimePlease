@@ -55,6 +55,7 @@ public class MainController implements Initializable {
     private Duration workOnWeekTime = Duration.ofHours(40);
     private Timeline animation = null;
     private EventHandler<ActionEvent> eventHandler = e -> changeImage();
+    private EventHandler<MouseEvent> mouseEventEventHandler = e -> changeImage();
     private Thread thread;
 
     @Override
@@ -154,11 +155,12 @@ public class MainController implements Initializable {
 
     public void showSkin(String skinPath, Double time) throws IOException {
         imagesList.clear();
+        skinView.removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseEventEventHandler);
         for (String filePath : getResourceFiles(skinPath)) {
             imagesList.add(new Image(getClass().getResourceAsStream(skinPath + filePath)));
         }
         skinView.setImage(imagesList.get(0));
-        skinView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> changeImage());
+        skinView.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEventEventHandler);
         if (animation != null)
             animation.stop();
         animation = new Timeline(new KeyFrame(javafx.util.Duration.millis(time), eventHandler));
