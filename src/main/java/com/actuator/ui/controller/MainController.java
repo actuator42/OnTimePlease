@@ -53,6 +53,8 @@ public class MainController implements Initializable {
 
     private ArrayList<Image> imagesList = new ArrayList<>();
     private Duration workOnWeekTime = Duration.ofHours(40);
+    private Timeline animation = null;
+    private EventHandler<ActionEvent> eventHandler = e -> changeImage();
     private Thread thread;
 
     @Override
@@ -151,22 +153,27 @@ public class MainController implements Initializable {
     }
 
     public void showSkin(String skinPath, Double time) throws IOException {
+        imagesList.clear();
         for (String filePath : getResourceFiles(skinPath)) {
             imagesList.add(new Image(getClass().getResourceAsStream(skinPath + filePath)));
         }
         skinView.setImage(imagesList.get(0));
-        EventHandler<ActionEvent> eventHandler = e -> {
-            int index;
-            if (imagesList.indexOf(skinView.getImage()) == imagesList.size() - 1) {
-                index = 0;
-            } else {
-                index = imagesList.indexOf(skinView.getImage()) + 1;
-            }
-            skinView.setImage(imagesList.get(index));
-        };
-        Timeline animation = new Timeline(new KeyFrame(javafx.util.Duration.millis(time), eventHandler));
+        skinView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> changeImage());
+        if (animation != null)
+            animation.stop();
+        animation = new Timeline(new KeyFrame(javafx.util.Duration.millis(time), eventHandler));
         animation.setCycleCount(Timeline.INDEFINITE);
         animation.play();
+    }
+
+    private void changeImage() {
+        int index;
+        if (imagesList.indexOf(skinView.getImage()) == imagesList.size() - 1) {
+            index = 0;
+        } else {
+            index = imagesList.indexOf(skinView.getImage()) + 1;
+        }
+        skinView.setImage(imagesList.get(index));
     }
 
     private List<String> getResourceFiles(String path) throws IOException {
