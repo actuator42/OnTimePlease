@@ -1,7 +1,7 @@
 package com.actuator.ui.controller;
 
 import com.actuator.ui.model.DayInfo;
-import com.actuator.ui.view.ImportDialog;
+import com.actuator.ui.view.Dialog;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,6 +20,6 @@ public class ImportDialogController {
         }
         MainController.getInstance().summeryTime(dataList);
         MainController.getInstance().tableView.setItems(dataList);
-        ImportDialog.getDialog().close();
+        Dialog.Dialog_kind.imports.close();
     }
 }

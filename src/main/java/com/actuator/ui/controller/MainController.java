@@ -2,11 +2,13 @@ package com.actuator.ui.controller;
 
 import com.actuator.ui.model.DayInfo;
 import com.actuator.ui.model.EditCell;
-import com.actuator.ui.view.ImportDialog;
-import com.actuator.ui.view.InfoDialog;
+import com.actuator.ui.view.Dialog;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -15,11 +17,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -34,6 +42,7 @@ public class MainController implements Initializable {
     public TableColumn<DayInfo, String> statusCol;
 
     private static MainController instance;
+    public ImageView skinView;
     public Pane mainPane;
     public TableView tableView;
     public ProgressBar progressBar;
@@ -42,6 +51,7 @@ public class MainController implements Initializable {
     public Button minus;
     public Button refresh;
 
+    private ArrayList<Image> imagesList = new ArrayList<>();
     private Duration workOnWeekTime = Duration.ofHours(40);
     private Thread thread;
 
@@ -50,7 +60,7 @@ public class MainController implements Initializable {
         if (instance == null)
             instance = this;
         tableView.setOnKeyPressed(event -> {
-            TablePosition<DayInfo, String> pos = tableView.getFocusModel().getFocusedCell() ;
+            TablePosition<DayInfo, String> pos = tableView.getFocusModel().getFocusedCell();
             if (pos != null && event.getCode().isLetterKey()) {
                 tableView.edit(pos.getRow(), pos.getTableColumn());
             }
@@ -95,11 +105,12 @@ public class MainController implements Initializable {
         for (DayInfo day : dataList) {
             cumulative = cumulative.plus(day.getWorkTimeDuration());
         }
-        ((TableColumn)tableView.getColumns().get(0)).setVisible(false);
-        ((TableColumn)tableView.getColumns().get(0)).setVisible(true);
+        ((TableColumn) tableView.getColumns().get(0)).setVisible(false);
+        ((TableColumn) tableView.getColumns().get(0)).setVisible(true);
         final Duration finalCumulative = cumulative;
         Task<Void> task = new Task<Void>() {
-            @Override public Void call() {
+            @Override
+            public Void call() {
                 LocalDateTime startTime = LocalDateTime.now();
                 while (true) {
                     Duration runningDuration = Duration.between(startTime, LocalDateTime.now());
@@ -107,7 +118,7 @@ public class MainController implements Initializable {
                     String v = String.format(
                             "%d:%02d", (runningDuration.plusSeconds(finalCumulative.getSeconds()).toHours()),
                             (runningDuration.plusSeconds(finalCumulative.getSeconds()).toMinutes() % 60));
-                    v+= " hours work a week\nweek remain " + getWeekRemain(runningDuration);
+                    v += " hours work a week\nweek remain " + getWeekRemain(runningDuration);
                     updateMessage(v);
                     try {
                         Thread.sleep(2000);
@@ -139,12 +150,52 @@ public class MainController implements Initializable {
         thread.start();
     }
 
+    public void showSkin(String skinPath, Double time) throws IOException {
+        for (String filePath : getResourceFiles(skinPath)) {
+            imagesList.add(new Image(getClass().getResourceAsStream(skinPath + filePath)));
+        }
+        skinView.setImage(imagesList.get(0));
+        EventHandler<ActionEvent> eventHandler = e -> {
+            int index;
+            if (imagesList.indexOf(skinView.getImage()) == imagesList.size() - 1) {
+                index = 0;
+            } else {
+                index = imagesList.indexOf(skinView.getImage()) + 1;
+            }
+            skinView.setImage(imagesList.get(index));
+        };
+        Timeline animation = new Timeline(new KeyFrame(javafx.util.Duration.millis(time), eventHandler));
+        animation.setCycleCount(Timeline.INDEFINITE);
+        animation.play();
+    }
+
+    private List<String> getResourceFiles(String path) throws IOException {
+        List<String> filenames = new ArrayList<>();
+        try (InputStream in = getResourceAsStream(path);
+             BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+            String resource;
+            while ((resource = br.readLine()) != null) {
+                filenames.add(resource);
+            }
+        }
+        return filenames;
+    }
+
+    private InputStream getResourceAsStream(String resource) {
+        final InputStream in = getContextClassLoader().getResourceAsStream(resource);
+        return in == null ? getClass().getResourceAsStream(resource) : in;
+    }
+
+    private ClassLoader getContextClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
+    }
+
     public static MainController getInstance() {
         return instance;
     }
 
     public void importMenuClick(ActionEvent actionEvent) {
-        new ImportDialog().show();
+        Dialog.Dialog_kind.imports.show();
     }
 
     public void refreshButtionClick(MouseEvent mouseEvent) {
@@ -156,9 +207,9 @@ public class MainController implements Initializable {
         if (tableView.getItems().size() > 0) {
             for (Object dayInfo : tableView.getItems()) {
                 if (date == null)
-                    date = LocalDate.parse(((DayInfo)dayInfo).getDay(), PATTERN);
-                else if (!date.isAfter(LocalDate.parse(((DayInfo)dayInfo).getDay(), PATTERN))) {
-                    date = LocalDate.parse(((DayInfo)dayInfo).getDay(), PATTERN);
+                    date = LocalDate.parse(((DayInfo) dayInfo).getDay(), PATTERN);
+                else if (!date.isAfter(LocalDate.parse(((DayInfo) dayInfo).getDay(), PATTERN))) {
+                    date = LocalDate.parse(((DayInfo) dayInfo).getDay(), PATTERN);
                 }
             }
         } else {
@@ -177,6 +228,11 @@ public class MainController implements Initializable {
     }
 
     public void aboutMenuClick(ActionEvent actionEvent) {
-        new InfoDialog().show();
+        Dialog.Dialog_kind.info.show();
+    }
+
+
+    public void preferenceMenuClick(ActionEvent actionEvent) {
+        Dialog.Dialog_kind.preference.show();
     }
 }

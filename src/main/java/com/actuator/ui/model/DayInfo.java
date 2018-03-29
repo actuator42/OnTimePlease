@@ -11,7 +11,8 @@ import java.util.Arrays;
 
 public class DayInfo {
     private String[] HolidayStatus = {"휴일", "연차휴가", "공가", "교육(사내)", "교육(사외)", "출장(국내)", "출장(국외)"};
-    private DateTimeFormatter PATTERN = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+    private DateTimeFormatter FULL_PATTERN = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+    private DateTimeFormatter TIME_PATTERN = DateTimeFormatter.ofPattern("HH:mm");
     private SimpleStringProperty index;
     private SimpleStringProperty day;
     private SimpleStringProperty dayType;
@@ -91,11 +92,6 @@ public class DayInfo {
     private void calculateWorkTime() {
         if (!isHolidays()) {
             workTimeDuration = Duration.between(getTheWork.get(), leaveTheWork.get());
-            if (workTimeDuration.toHours() >= 8) {
-                workTimeDuration = workTimeDuration.minusHours(1);
-            } else if (workTimeDuration.toHours() >= 4) {
-                workTimeDuration = workTimeDuration.minusMinutes(30);
-            }
             if (isHalfRest())
                 workTimeDuration = workTimeDuration.plusHours(4);
             if (isExistDayTimeAndEquals("외근")) {
@@ -105,6 +101,11 @@ public class DayInfo {
                 String[] v = raw.split(":");
                 workTimeDuration = workTimeDuration.plusHours(Long.parseLong(v[0]));
                 workTimeDuration = workTimeDuration.plusMinutes(Long.parseLong(v[1]));
+            }
+            if (workTimeDuration.toHours() >= 8) {
+                workTimeDuration = workTimeDuration.minusHours(1);
+            } else if (workTimeDuration.toHours() >= 4) {
+                workTimeDuration = workTimeDuration.minusMinutes(30);
             }
         } else {
             workTimeDuration = Duration.ofSeconds(0).plusHours(8);
@@ -173,7 +174,7 @@ public class DayInfo {
     }
 
     public LocalDateTime dateTimeParse(String s) {
-        return LocalDateTime.parse(day.getValue() + " " + s, PATTERN);
+        return LocalDateTime.parse(day.getValue() + " " + s, FULL_PATTERN);
     }
 
     public int remainTiem() {
@@ -221,7 +222,7 @@ public class DayInfo {
     }
 
     public String getGetTheWork() {
-        return getTheWork.get().getHour() + ":" + getTheWork.get().getMinute();
+        return getTheWork.get().format(TIME_PATTERN);
     }
 
     public void setGetTheWork(String getTheWork) {
@@ -241,7 +242,7 @@ public class DayInfo {
     }
 
     public String getLeaveTheWork() {
-        return leaveTheWork.get().getHour() + ":" + leaveTheWork.get().getMinute();
+        return leaveTheWork.get().format(TIME_PATTERN);
     }
 
     public void setLeaveTheWork(String leaveTheWork) {

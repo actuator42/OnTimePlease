@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -20,11 +21,12 @@
         </TableView>
         <ProgressBar fx:id="progressBar" layoutX="693.0" layoutY="63.0" prefWidth="200.0" progress="0.0" />
         <Label fx:id="total" layoutX="693.0" layoutY="83.0" text="" />
-        <MenuBar prefHeight="29.0" prefWidth="907.0">
+        <MenuBar prefHeight="29.0" prefWidth="917.0">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#importMenuClick" text="import" />
+                        <MenuItem mnemonicParsing="false" onAction="#preferenceMenuClick" text="preference" />
                         <MenuItem mnemonicParsing="false" text="Close" />
                     </items>
                 </Menu>
@@ -38,5 +40,6 @@
         <Button fx:id="refresh" layoutX="860.0" layoutY="222.0" mnemonicParsing="false" onMouseClicked="#refreshButtionClick" text="" />
         <Button fx:id="plus" layoutX="14.0" layoutY="531.0" mnemonicParsing="false" onMouseClicked="#plusClick" prefHeight="3.0" prefWidth="26.0" text="+" />
         <Button fx:id="minus" layoutX="40.0" layoutY="531.0" mnemonicParsing="false" onMouseClicked="#minusClick" prefHeight="3.0" prefWidth="26.0" text="-" />
+      <ImageView fx:id="skinView" fitHeight="200.0" fitWidth="650.0" layoutX="14.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true" />
     </children>
 </Pane>
