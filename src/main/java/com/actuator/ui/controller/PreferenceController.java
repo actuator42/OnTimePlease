@@ -3,10 +3,7 @@ package com.actuator.ui.controller;
 import com.actuator.ui.view.Dialog;
 import javafx.event.EventType;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitMenuButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
@@ -19,6 +16,7 @@ public class PreferenceController implements Initializable {
     public SplitMenuButton skinMenu;
     public MenuItem selected;
     public TextField durationField;
+    public CheckBox lotationCheckbox;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -28,13 +26,15 @@ public class PreferenceController implements Initializable {
                 skinMenu.setText(selected.getText());
             });
         }
+        lotationCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            durationField.setDisable(oldValue);
+        });
     }
 
     public void okButtonClick(MouseEvent mouseEvent) throws IOException {
         if (!selected.getText().equalsIgnoreCase("None")) {
-            MainController.getInstance().showSkin(
-                    "/images/skin/" + (selected.getText().equals("Random") ? "" : selected.getText() + "/"),
-                    Double.valueOf(durationField.getText()));
+            MainController.getInstance().showSkin(selected.getText(),
+                    Double.valueOf(durationField.isDisable() ? "0" : durationField.getText()));
         }
         Dialog.Dialog_kind.preference.close();
     }

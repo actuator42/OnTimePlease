@@ -13,7 +13,7 @@
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.actuator.ui.controller.PreferenceController">
     <children>
         <Button fx:id="okButton" layoutX="455.0" layoutY="359.0" mnemonicParsing="false" onMouseClicked="#okButtonClick" prefHeight="27.0" prefWidth="61.0" text="OK" />
-        <Button fx:id="closeButton" layoutX="525.0" layoutY="359.0" mnemonicParsing="false" onMouseClicked="#closeButtonClick" text="Cancel" />
+        <Button fx:id="closeButton" layoutX="525.0" layoutY="359.0" mnemonicParsing="false" onMouseClicked="#closeButtonClick" prefHeight="27.0" prefWidth="61.0" text="Cancel" />
         <Separator layoutX="17.0" layoutY="348.0" prefHeight="0.0" prefWidth="571.0" />
         <SplitMenuButton fx:id="skinMenu" layoutX="17.0" layoutY="64.0" mnemonicParsing="false" text="None">
             <items>
@@ -26,8 +26,8 @@
         </SplitMenuButton>
       <Label layoutX="17.0" layoutY="36.0" text="Skin" />
       <Separator layoutX="17.0" layoutY="53.0" prefHeight="3.0" prefWidth="120.0" />
-      <TextField fx:id="durationField" layoutX="197.0" layoutY="64.0" prefHeight="27.0" prefWidth="120.0" text="3000" />
-      <Label layoutX="137.0" layoutY="69.0" text="Duration" />
-      <Label layoutX="326.0" layoutY="69.0" text="ms" />
+        <CheckBox fx:id="lotationCheckbox" layoutX="137.0" layoutY="69.0" mnemonicParsing="false" text="Lotation Images" />
+        <TextField fx:id="durationField" layoutX="270.0" layoutY="65.0" prefHeight="27.0" prefWidth="120.0" text="3000" disable="true" />
+        <Label layoutX="399.0" layoutY="70.0" text="ms" />
     </children>
 </AnchorPane>

@@ -2,6 +2,7 @@ package com.actuator.ui.controller;
 
 import com.actuator.ui.model.DayInfo;
 import com.actuator.ui.model.EditCell;
+import com.actuator.ui.util.FXUtil;
 import com.actuator.ui.view.Dialog;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -55,7 +56,6 @@ public class MainController implements Initializable {
     private Duration workOnWeekTime = Duration.ofHours(40);
     private Timeline animation = null;
     private EventHandler<ActionEvent> eventHandler = e -> changeImage();
-    private EventHandler<MouseEvent> mouseEventEventHandler = e -> changeImage();
     private Thread thread;
 
     @Override
@@ -153,14 +153,13 @@ public class MainController implements Initializable {
         thread.start();
     }
 
-    public void showSkin(String skinPath, Double time) throws IOException {
+    public void showSkin(String skinKind, Double time) {
         imagesList.clear();
-        skinView.removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseEventEventHandler);
-        for (String filePath : getResourceFiles(skinPath)) {
-            imagesList.add(new Image(getClass().getResourceAsStream(skinPath + filePath)));
+        for (String filePath : FXUtil.getDefaultSkin(skinKind)) {
+            imagesList.add(new Image(getClass().getResourceAsStream(filePath)));
         }
         skinView.setImage(imagesList.get(0));
-        skinView.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEventEventHandler);
+        skinView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> changeImage());
         if (animation != null)
             animation.stop();
         animation = new Timeline(new KeyFrame(javafx.util.Duration.millis(time), eventHandler));

@@ -7,9 +7,30 @@
 
 <AnchorPane prefHeight="366.0" prefWidth="499.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.actuator.ui.controller.InfomationController">
    <children>
-      <ImageView fx:id="logo" fitHeight="150.0" fitWidth="200.0" layoutX="150.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
-      <Label layoutX="72.0" layoutY="175.0" text="source" />
-      <Hyperlink fx:id="linker" layoutX="120.0" layoutY="171.0" text="https://github.com/actuator42/OnTimePlease.git" />
-      <Label fx:id="manifestLabel" layoutX="76.0" layoutY="221.0" text="" />
+      <TabPane prefHeight="366.0" prefWidth="499.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <tabs>
+          <Tab text="Info">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                 <children>
+                     <ImageView fx:id="logo" fitHeight="150.0" fitWidth="200.0" layoutX="150.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="150.0" />
+                     <Label layoutX="72.0" layoutY="175.0" text="source" AnchorPane.leftAnchor="72.0" />
+                     <Hyperlink fx:id="linker" layoutX="120.0" layoutY="171.0" text="https://github.com/actuator42/OnTimePlease.git" AnchorPane.leftAnchor="120.0" />
+                     <Label fx:id="manifestLabel" layoutX="76.0" layoutY="221.0" text="" AnchorPane.leftAnchor="76.0" />
+                 </children>
+              </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="debug">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextArea fx:id="debugArea" editable="false" layoutX="14.0" layoutY="50.0" prefHeight="269.0" prefWidth="471.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="50.0" />
+                        <Button layoutX="426.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#clearArea" prefHeight="27.0" prefWidth="59.0" text="clear" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
    </children>
 </AnchorPane>
