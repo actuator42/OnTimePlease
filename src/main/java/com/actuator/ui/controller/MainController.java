@@ -154,7 +154,7 @@ public class MainController implements Initializable {
     }
 
     public void showSkin(String skinKind, Double time) {
-        imagesList.clear();
+        clearSkin();
         for (String filePath : FXUtil.getDefaultSkin(skinKind)) {
             imagesList.add(new Image(getClass().getResourceAsStream(filePath)));
         }
@@ -167,35 +167,9 @@ public class MainController implements Initializable {
         animation.play();
     }
 
-    private void changeImage() {
-        int index;
-        if (imagesList.indexOf(skinView.getImage()) == imagesList.size() - 1) {
-            index = 0;
-        } else {
-            index = imagesList.indexOf(skinView.getImage()) + 1;
-        }
-        skinView.setImage(imagesList.get(index));
-    }
-
-    private List<String> getResourceFiles(String path) throws IOException {
-        List<String> filenames = new ArrayList<>();
-        try (InputStream in = getResourceAsStream(path);
-             BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-            String resource;
-            while ((resource = br.readLine()) != null) {
-                filenames.add(resource);
-            }
-        }
-        return filenames;
-    }
-
-    private InputStream getResourceAsStream(String resource) {
-        final InputStream in = getContextClassLoader().getResourceAsStream(resource);
-        return in == null ? getClass().getResourceAsStream(resource) : in;
-    }
-
-    private ClassLoader getContextClassLoader() {
-        return Thread.currentThread().getContextClassLoader();
+    public void clearSkin() {
+        imagesList.clear();
+        skinView.setImage(null);
     }
 
     public static MainController getInstance() {
@@ -242,5 +216,36 @@ public class MainController implements Initializable {
 
     public void preferenceMenuClick(ActionEvent actionEvent) {
         Dialog.Dialog_kind.preference.show();
+    }
+
+    private void changeImage() {
+        int index;
+        if (imagesList.indexOf(skinView.getImage()) == imagesList.size() - 1) {
+            index = 0;
+        } else {
+            index = imagesList.indexOf(skinView.getImage()) + 1;
+        }
+        skinView.setImage(imagesList.get(index));
+    }
+
+    private List<String> getResourceFiles(String path) throws IOException {
+        List<String> filenames = new ArrayList<>();
+        try (InputStream in = getResourceAsStream(path);
+             BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+            String resource;
+            while ((resource = br.readLine()) != null) {
+                filenames.add(resource);
+            }
+        }
+        return filenames;
+    }
+
+    private InputStream getResourceAsStream(String resource) {
+        final InputStream in = getContextClassLoader().getResourceAsStream(resource);
+        return in == null ? getClass().getResourceAsStream(resource) : in;
+    }
+
+    private ClassLoader getContextClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
     }
 }

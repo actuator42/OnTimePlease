@@ -35,6 +35,8 @@ public class PreferenceController implements Initializable {
         if (!selected.getText().equalsIgnoreCase("None")) {
             MainController.getInstance().showSkin(selected.getText(),
                     Double.valueOf(durationField.isDisable() ? "0" : durationField.getText()));
+        } else {
+            MainController.getInstance().clearSkin();
         }
         Dialog.Dialog_kind.preference.close();
     }
