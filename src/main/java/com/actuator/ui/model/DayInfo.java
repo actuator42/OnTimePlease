@@ -22,6 +22,7 @@ public class DayInfo {
     private SimpleStringProperty status;
     private SimpleStringProperty workTime;
     private Duration workTimeDuration;
+    private Duration breakTimeDuration;
 
     public enum Element {
         index(0), date(1), dayType(2), dayStatus(4), dayTypeTime(5), getTheWork(6), status(7), leaveTheWork(9), workTime(11);
@@ -56,7 +57,9 @@ public class DayInfo {
     }
 
     public void updateValuesAtColumns(String columnName, String newValue) {
-        if (columnName.equals("IN"))
+        if (columnName.equals("Date"))
+            columnName = "date";
+        else if (columnName.equals("IN"))
             columnName = "getTheWork";
         else if (columnName.equals("OUT"))
             columnName = "leaveTheWork";
@@ -92,6 +95,7 @@ public class DayInfo {
     private void calculateWorkTime() {
         if (!isHolidays()) {
             workTimeDuration = Duration.between(getTheWork.get(), leaveTheWork.get());
+            breakTimeDuration = Duration.ofMinutes(0);
             if (isHalfRest())
                 workTimeDuration = workTimeDuration.plusHours(4);
             if (isExistDayTimeAndEquals("외근")) {
@@ -102,15 +106,33 @@ public class DayInfo {
                 workTimeDuration = workTimeDuration.plusHours(Long.parseLong(v[0]));
                 workTimeDuration = workTimeDuration.plusMinutes(Long.parseLong(v[1]));
             }
-            if (workTimeDuration.toHours() >= 8) {
-                workTimeDuration = workTimeDuration.minusHours(1);
-            } else if (workTimeDuration.toHours() >= 4) {
-                workTimeDuration = workTimeDuration.minusMinutes(30);
+            Duration temp = Duration.ofMinutes(workTimeDuration.toMinutes());
+            if ((temp.toHours() - 1) >= 12) {
+                breakTimeDuration = breakTimeDuration.plusHours(1);
+                workTime.setValue("12.00(" + getCalculateTime() + ")");
+                workTimeDuration = Duration.ofHours(12);
+            } else {
+                if (temp.minusMinutes(240).toMinutes() > 0) {
+                    minusBreakTime(temp);
+                    temp = temp.minusMinutes(240);
+                    if (temp.minusMinutes(240).toMinutes() > 0) {
+                        minusBreakTime(temp);
+                    }
+                }
+                workTimeDuration = workTimeDuration.minus(breakTimeDuration);
+                workTime.setValue(getCalculateTime() + getBreakTimeString());
             }
         } else {
-            workTimeDuration = Duration.ofSeconds(0).plusHours(8);
+            workTimeDuration = Duration.ofHours(8);
         }
-        workTime.setValue(getCalculateTime());
+    }
+
+    private void minusBreakTime(Duration temp) {
+        if (temp.minusMinutes(240).toMinutes() <= 30) {
+            breakTimeDuration = breakTimeDuration.plusMinutes(temp.minusMinutes(240).toMinutes());
+        } else {
+            breakTimeDuration = breakTimeDuration.plusMinutes(30);
+        }
     }
 
     private boolean isExistDayTimeAndEquals(String status) {
@@ -125,10 +147,24 @@ public class DayInfo {
 
     private String getCalculateTime() {
         String s = workTimeDuration.toHours() + ".";
-        int digit = (int) (Math.log10(workTimeDuration.toMinutes() % 60) + 1);
-        if (digit <= 1)
+        if (getDigit(workTimeDuration.toMinutes()) <= 1)
             s+="0";
         return s + workTimeDuration.toMinutes() % 60;
+    }
+
+    private String getBreakTimeString() {
+        if (breakTimeDuration.toMinutes() == 0)
+            return  "";
+        if (breakTimeDuration.toHours() == 1)
+            return "(-1.0)";
+        if (getDigit(breakTimeDuration.toMinutes()) <= 1) {
+            return "(-0.0" + breakTimeDuration.toMinutes() + ")";
+        }
+        return "(-0." + breakTimeDuration.toMinutes() + ")";
+    }
+
+    private int getDigit(long stringNum) {
+        return (int) (Math.log10(stringNum % 60) + 1);
     }
 
     private void setValue(Element element, String s) {

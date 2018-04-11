@@ -18,17 +18,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -186,7 +181,9 @@ public class MainController implements Initializable {
 
     public void plusClick(MouseEvent mouseEvent) {
         LocalDate date = null;
-        if (tableView.getItems().size() > 0) {
+        if (tableView.getItems().size() == 0) {
+            date = LocalDate.now().minusDays(1);
+        } else if (tableView.getItems().size() > 0) {
             for (Object dayInfo : tableView.getItems()) {
                 if (date == null)
                     date = LocalDate.parse(((DayInfo) dayInfo).getDay(), PATTERN);
@@ -226,26 +223,5 @@ public class MainController implements Initializable {
             index = imagesList.indexOf(skinView.getImage()) + 1;
         }
         skinView.setImage(imagesList.get(index));
-    }
-
-    private List<String> getResourceFiles(String path) throws IOException {
-        List<String> filenames = new ArrayList<>();
-        try (InputStream in = getResourceAsStream(path);
-             BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-            String resource;
-            while ((resource = br.readLine()) != null) {
-                filenames.add(resource);
-            }
-        }
-        return filenames;
-    }
-
-    private InputStream getResourceAsStream(String resource) {
-        final InputStream in = getContextClassLoader().getResourceAsStream(resource);
-        return in == null ? getClass().getResourceAsStream(resource) : in;
-    }
-
-    private ClassLoader getContextClassLoader() {
-        return Thread.currentThread().getContextClassLoader();
     }
 }

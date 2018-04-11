@@ -2,8 +2,6 @@ package com.actuator.ui.model;
 
 import javafx.event.Event;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
 
 public class EditCell<S, T> extends TableCell<S, T> {
@@ -32,25 +30,6 @@ public class EditCell<S, T> extends TableCell<S, T> {
         textField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
             if (! isNowFocused) {
                 commitEdit(this.converter.fromString(textField.getText()));
-            }
-        });
-        textField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode() == KeyCode.ESCAPE) {
-                textField.setText(converter.toString(getItem()));
-                cancelEdit();
-                event.consume();
-            } else if (event.getCode() == KeyCode.RIGHT) {
-                getTableView().getSelectionModel().selectRightCell();
-                event.consume();
-            } else if (event.getCode() == KeyCode.LEFT) {
-                getTableView().getSelectionModel().selectLeftCell();
-                event.consume();
-            } else if (event.getCode() == KeyCode.UP) {
-                getTableView().getSelectionModel().selectAboveCell();
-                event.consume();
-            } else if (event.getCode() == KeyCode.DOWN) {
-                getTableView().getSelectionModel().selectBelowCell();
-                event.consume();
             }
         });
     }
@@ -113,4 +92,11 @@ public class EditCell<S, T> extends TableCell<S, T> {
         setContentDisplay(ContentDisplay.TEXT_ONLY);
     }
 
+    @Override
+    protected void updateItem(T item, boolean empty) {
+        super.updateItem(item, empty);
+        if (!isEmpty() && item.toString().startsWith("12.00(")) {
+            setStyle("-fx-text-fill: red");
+        }
+    }
 }
