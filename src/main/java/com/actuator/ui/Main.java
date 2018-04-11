@@ -13,6 +13,7 @@ import java.io.StringWriter;
 
 public class Main extends Application {
     private static Main instance;
+    private Stage stage;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -25,6 +26,7 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.show();
         instance = this;
+        stage = primaryStage;
     }
 
     private static void setError(Thread thread, Throwable throwable) {
@@ -36,6 +38,10 @@ public class Main extends Application {
 
     public void openBrowser(String url) {
         getHostServices().showDocument(url);
+    }
+
+    public void close() {
+        stage.close();
     }
 
     public static Main getInstance() {

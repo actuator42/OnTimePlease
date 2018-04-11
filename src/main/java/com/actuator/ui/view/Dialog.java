@@ -1,5 +1,7 @@
 package com.actuator.ui.view;
 
+import com.actuator.ui.Main;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -36,6 +38,7 @@ public class Dialog {
             stage.initStyle(StageStyle.DECORATED);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(getStage("/main.fxml"));
+            stage.getIcons().add(new Image(Main.class.getResourceAsStream("/images/icons/" + kind + ".png")));
             kind.setStage(stage);
         }
     }

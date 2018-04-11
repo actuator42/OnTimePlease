@@ -1,5 +1,6 @@
 package com.actuator.ui.controller;
 
+import com.actuator.ui.Main;
 import com.actuator.ui.model.DayInfo;
 import com.actuator.ui.model.EditCell;
 import com.actuator.ui.util.FXUtil;
@@ -213,6 +214,10 @@ public class MainController implements Initializable {
 
     public void preferenceMenuClick(ActionEvent actionEvent) {
         Dialog.Dialog_kind.preference.show();
+    }
+
+    public void closeMenuClick(ActionEvent actionEvent) {
+        Main.getInstance().close();
     }
 
     private void changeImage() {

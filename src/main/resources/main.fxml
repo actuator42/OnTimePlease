@@ -27,7 +27,7 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#importMenuClick" text="import" />
                         <MenuItem mnemonicParsing="false" onAction="#preferenceMenuClick" text="preference" />
-                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem mnemonicParsing="false" onAction="#closeMenuClick" text="Close" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
