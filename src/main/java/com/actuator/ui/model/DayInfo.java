@@ -1,5 +1,6 @@
 package com.actuator.ui.model;
 
+import com.actuator.ui.controller.PreferenceController;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -7,10 +8,12 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class DayInfo {
-    private String[] HolidayStatus = {"휴일", "연차휴가", "공가", "교육(사내)", "교육(사외)", "출장(국내)", "출장(국외)"};
+    public final static String[] HolidayStatus = {"휴일", "연차휴가", "공가", "교육(사내)", "교육(사외)", "출장(국내)", "출장(국외)"};
     private DateTimeFormatter FULL_PATTERN = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
     private DateTimeFormatter TIME_PATTERN = DateTimeFormatter.ofPattern("HH:mm");
     private SimpleStringProperty index;
@@ -124,6 +127,7 @@ public class DayInfo {
             }
         } else {
             workTimeDuration = Duration.ofHours(8);
+            workTime.setValue("8.00");
         }
     }
 
@@ -209,6 +213,15 @@ public class DayInfo {
         }
     }
 
+    public static String[] getDayStatusList() {
+        List<String> v = new ArrayList<>();
+        v.add("평일");
+        v.addAll(Arrays.asList(HolidayStatus));
+        String[] r = new String[v.size()];
+        v.toArray(r);
+        return r;
+    }
+
     public LocalDateTime dateTimeParse(String s) {
         return LocalDateTime.parse(day.getValue() + " " + s, FULL_PATTERN);
     }
@@ -218,7 +231,7 @@ public class DayInfo {
     }
 
     public Duration getWorkTimeDuration() {
-        if (isToday()) {
+        if (isToday() && (PreferenceController.getInstance() == null || PreferenceController.getInstance().getUseCurrentTime())) {
             setLeaveTheWork(LocalDateTime.now());
         }
         calculateWorkTime();
@@ -247,6 +260,10 @@ public class DayInfo {
 
     public void setDay(String day) {
         this.day.set(day);
+    }
+
+    public SimpleStringProperty dayTypeProperty() {
+        return dayType;
     }
 
     public String getDayType() {

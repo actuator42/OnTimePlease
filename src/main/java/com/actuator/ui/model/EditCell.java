@@ -96,7 +96,9 @@ public class EditCell<S, T> extends TableCell<S, T> {
     protected void updateItem(T item, boolean empty) {
         super.updateItem(item, empty);
         if (!isEmpty() && item.toString().startsWith("12.00(")) {
-            setStyle("-fx-text-fill: red");
+            setStyle("-fx-text-fill: red; -fx-alignment: CENTER");
+        } else {
+            setStyle("-fx-text-fill: black; -fx-alignment: CENTER");
         }
     }
 }

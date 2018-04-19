@@ -39,6 +39,7 @@ public class Dialog {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(getStage("/main.fxml"));
             stage.getIcons().add(new Image(Main.class.getResourceAsStream("/images/icons/" + kind + ".png")));
+            stage.setTitle(kind.name());
             kind.setStage(stage);
         }
     }

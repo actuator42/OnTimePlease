@@ -26,8 +26,11 @@
         </SplitMenuButton>
       <Label layoutX="17.0" layoutY="36.0" text="Skin" />
       <Separator layoutX="17.0" layoutY="53.0" prefHeight="3.0" prefWidth="120.0" />
-        <CheckBox fx:id="lotationCheckbox" layoutX="137.0" layoutY="69.0" mnemonicParsing="false" text="Lotation Images" />
-        <TextField fx:id="durationField" layoutX="270.0" layoutY="65.0" prefHeight="27.0" prefWidth="120.0" text="3000" disable="true" />
+        <CheckBox fx:id="rotationCheckbox" layoutX="137.0" layoutY="69.0" mnemonicParsing="false" text="Rotation Images" />
+        <TextField fx:id="durationField" disable="true" layoutX="270.0" layoutY="65.0" prefHeight="27.0" prefWidth="120.0" text="3000" />
         <Label layoutX="399.0" layoutY="70.0" text="ms" />
+      <Separator layoutX="17.0" layoutY="124.0" prefHeight="3.0" prefWidth="120.0" />
+      <Label layoutX="17.0" layoutY="107.0" text="Time" />
+      <CheckBox fx:id="useCurrentTime" layoutX="17.0" layoutY="136.0" mnemonicParsing="false" selected="true" text="Calculate the time with today's current time" />
     </children>
 </AnchorPane>

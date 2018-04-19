@@ -6,7 +6,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -16,23 +15,27 @@ public class PreferenceController implements Initializable {
     public SplitMenuButton skinMenu;
     public MenuItem selected;
     public TextField durationField;
-    public CheckBox lotationCheckbox;
+    public CheckBox rotationCheckbox;
+    public CheckBox useCurrentTime;
+    private static PreferenceController instance;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if (instance == null)
+            instance = this;
         for (MenuItem item : skinMenu.getItems()) {
             item.addEventHandler(EventType.ROOT, event -> {
                 selected = (MenuItem) event.getSource();
                 skinMenu.setText(selected.getText());
             });
         }
-        lotationCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+        rotationCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             durationField.setDisable(oldValue);
         });
     }
 
-    public void okButtonClick(MouseEvent mouseEvent) throws IOException {
-        if (!selected.getText().equalsIgnoreCase("None")) {
+    public void okButtonClick(MouseEvent mouseEvent) {
+        if (selected != null && !selected.getText().equalsIgnoreCase("None")) {
             MainController.getInstance().showSkin(selected.getText(),
                     Double.valueOf(durationField.isDisable() ? "0" : durationField.getText()));
         } else {
@@ -43,5 +46,13 @@ public class PreferenceController implements Initializable {
 
     public void closeButtonClick(MouseEvent mouseEvent) {
         Dialog.Dialog_kind.preference.close();
+    }
+
+    public static PreferenceController getInstance() {
+        return instance;
+    }
+
+    public boolean getUseCurrentTime() {
+        return useCurrentTime.isSelected();
     }
 }

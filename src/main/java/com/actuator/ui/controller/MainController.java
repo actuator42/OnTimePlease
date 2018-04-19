@@ -13,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -88,15 +89,21 @@ public class MainController implements Initializable {
     }
 
     private void setColumnFactoryAndAction(TableColumn<DayInfo, String> column, String columnName) {
-        column.setCellValueFactory(new PropertyValueFactory<>(columnName));
-        column.setCellFactory(col -> EditCell.createStringEditCell());
-        column.setOnEditCommit(event -> {
-            if (event != null && event.getTablePosition() != null && event.getTableView() != null) {
-                DayInfo dayInfo = event.getTableView().getItems().get(event.getTablePosition().getRow());
-                String newValue = event.getNewValue();
-                dayInfo.updateValuesAtColumns(event.getTablePosition().getTableColumn().getText(), newValue);
-            }
-        });
+        if (column.equals(dayCol)) {
+            column.setCellFactory(ComboBoxTableCell.forTableColumn(DayInfo.getDayStatusList()));
+            column.setCellValueFactory(cellData -> cellData.getValue().dayTypeProperty());
+        } else {
+            column.setCellFactory(col -> EditCell.createStringEditCell());
+            column.setCellValueFactory(new PropertyValueFactory<>(columnName));
+            column.setOnEditCommit(event -> {
+                if (event != null && event.getTablePosition() != null && event.getTableView() != null) {
+                    DayInfo dayInfo = event.getTableView().getItems().get(event.getTablePosition().getRow());
+                    String newValue = event.getNewValue();
+                    dayInfo.updateValuesAtColumns(event.getTablePosition().getTableColumn().getText(), newValue);
+                }
+            });
+        }
+        column.setStyle("-fx-alignment: CENTER");
     }
 
     public void summeryTime(ObservableList<DayInfo> dataList) {

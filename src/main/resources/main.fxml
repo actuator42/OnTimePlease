@@ -11,12 +11,12 @@
             <columns>
                 <TableColumn fx:id="indexCol" prefWidth="57.0" text="Index" />
                 <TableColumn fx:id="dateCol" prefWidth="126.0" text="Date" />
-                <TableColumn fx:id="dayCol" minWidth="136.0" prefWidth="136.0" text="DayType" />
+                <TableColumn fx:id="dayCol" minWidth="130.0" prefWidth="133.0" text="DayType" />
                 <TableColumn fx:id="dayTimeCol" prefWidth="108.0" text="DayTypeTime" />
                 <TableColumn fx:id="inCol" prefWidth="108.0" text="IN" />
                 <TableColumn fx:id="outCol" prefWidth="99.0" text="OUT" />
                 <TableColumn fx:id="workCol" prefWidth="116.0" text="WorkTime" />
-                <TableColumn fx:id="statusCol" prefWidth="138.0" text="Status" />
+                <TableColumn fx:id="statusCol" prefWidth="130.0" text="Status" />
             </columns>
         </TableView>
         <ProgressBar fx:id="progressBar" layoutX="693.0" layoutY="63.0" prefWidth="200.0" progress="0.0" />
@@ -25,14 +25,47 @@
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#importMenuClick" text="import" />
-                        <MenuItem mnemonicParsing="false" onAction="#preferenceMenuClick" text="preference" />
-                        <MenuItem mnemonicParsing="false" onAction="#closeMenuClick" text="Close" />
+                        <MenuItem mnemonicParsing="false" onAction="#importMenuClick" text="import">
+                            <graphic>
+                                <ImageView>
+                                    <image>
+                                        <Image url="/images/icons/imports_menu.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#preferenceMenuClick" text="preference">
+                            <graphic>
+                                <ImageView>
+                                    <image>
+                                        <Image url="/images/icons/preference_menu.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </MenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#closeMenuClick" text="Close">
+                            <graphic>
+                                <ImageView>
+                                    <image>
+                                        <Image url="/images/icons/close_menu.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </MenuItem>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#aboutMenuClick" text="About" />
+                        <MenuItem mnemonicParsing="false" onAction="#aboutMenuClick" text="About">
+                            <graphic>
+                                <ImageView>
+                                    <image>
+                                        <Image url="/images/icons/about.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </MenuItem>
                     </items>
                 </Menu>
             </menus>
