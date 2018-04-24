@@ -71,8 +71,8 @@
             </menus>
         </MenuBar>
         <Button fx:id="refresh" layoutX="860.0" layoutY="222.0" mnemonicParsing="false" onMouseClicked="#refreshButtionClick" text="" />
-        <Button fx:id="plus" layoutX="14.0" layoutY="531.0" mnemonicParsing="false" onMouseClicked="#plusClick" prefHeight="3.0" prefWidth="26.0" text="+" />
-        <Button fx:id="minus" layoutX="40.0" layoutY="531.0" mnemonicParsing="false" onMouseClicked="#minusClick" prefHeight="3.0" prefWidth="26.0" text="-" />
+        <Button fx:id="plus" layoutX="14.0" layoutY="531.0" mnemonicParsing="false" onMouseClicked="#plusClick" prefHeight="3.0" prefWidth="26.0" text="" />
+        <Button fx:id="minus" layoutX="40.0" layoutY="531.0" mnemonicParsing="false" onMouseClicked="#minusClick" prefHeight="3.0" prefWidth="26.0" text="" />
       <ImageView fx:id="skinView" fitHeight="200.0" fitWidth="650.0" layoutX="14.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true" />
     </children>
 </Pane>

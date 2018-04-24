@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 public class Main extends Application {
+    public final static String TRANSPARENT_CSS = Main.class.getResource("/transparentButton.css").toExternalForm();
     private static Main instance;
     private Stage stage;
 
@@ -24,6 +25,7 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icons/wonderboy.png")));
         primaryStage.setScene(new Scene(root, 907, 564));
         primaryStage.setResizable(false);
+//        primaryStage.getScene().getStylesheets().add(TRANSPARENT_CSS);
         primaryStage.show();
         instance = this;
         stage = primaryStage;

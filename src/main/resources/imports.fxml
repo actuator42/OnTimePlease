@@ -9,7 +9,7 @@
    <children>
       <TextArea fx:id="importArea" layoutX="14.0" layoutY="14.0" prefHeight="338.0" prefWidth="657.0" AnchorPane.bottomAnchor="48.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="14.0" />
       <Button fx:id="importBtn" layoutX="613.0" layoutY="359.0" mnemonicParsing="false" onAction="#importButtonClick" text="import" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="15.0" />
-       <Button layoutX="14.0" layoutY="359.0" mnemonicParsing="false" text="" >
+       <Button fx:id="helpBtn" layoutX="14.0" layoutY="359.0" mnemonicParsing="false" text="" onAction="#helpButtionClick" style="-fx-border-color: transparent;-fx-border-width: 0;-fx-background-radius: 0;-fx-background-color: transparent;-fx-font-size: 1em;-fx-text-fill: #828282;">
            <graphic>
                <ImageView>
                    <image>

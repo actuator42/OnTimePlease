@@ -73,7 +73,9 @@ public class MainController implements Initializable {
         setColumnFactoryAndAction(outCol, "leaveTheWork");
         setColumnFactoryAndAction(workCol, "workTime");
         setColumnFactoryAndAction(statusCol, "status");
-        refresh.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/icons/menu_refresh.png"))));
+        FXUtil.createImageButton("/images/icons/menu_refresh.png", refresh);
+        FXUtil.createImageButton("/images/icons/menu_plus.png", plus);
+        FXUtil.createImageButton("/images/icons/menu_minus.png", minus);
         progressBar.progressProperty().addListener((observable, oldValue, newValue) -> {
             double progress = newValue == null ? 0 : newValue.doubleValue();
             if (progress >= 1) {

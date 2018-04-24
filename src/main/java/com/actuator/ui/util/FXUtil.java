@@ -6,6 +6,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -19,6 +22,8 @@ import java.util.logging.Logger;
 
 public class FXUtil {
     public static final Logger logger = Logger.getLogger("FXUtil");
+    private static final String STYLE_NORMAL = "-fx-background-color: transparent; -fx-padding: 5, 5, 5, 5;";
+    private static final String STYLE_PRESSED = "-fx-background-color: transparent; -fx-padding: 6 4 4 6;";
     private static final Properties skin_properties;
 
     static {
@@ -28,6 +33,7 @@ public class FXUtil {
         skin_properties.setProperty("Seol-Hyun", "1.jpeg,2.jpeg");
         skin_properties.setProperty("other", "1.jpg,2.jpg,3.png,4.jpg");
     }
+
     public static Stage getStage(String path) {
         Stage stage = new Stage();
         try {
@@ -84,5 +90,13 @@ public class FXUtil {
 
     public static void log(String value) {
         InfomationController.getInstance().debugArea.appendText(value);
+    }
+
+    public static void createImageButton(String imagePath, Button button) {
+        if (imagePath.length() > 0)
+            button.setGraphic(new ImageView(new Image(FXUtil.class.getResourceAsStream(imagePath))));
+        button.setStyle(STYLE_NORMAL);
+        button.setOnMousePressed(event -> button.setStyle(STYLE_PRESSED));
+        button.setOnMouseReleased(event -> button.setStyle(STYLE_NORMAL));
     }
 }
