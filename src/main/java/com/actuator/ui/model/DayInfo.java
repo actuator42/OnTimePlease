@@ -13,7 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DayInfo {
-    public final static String[] HolidayStatus = {"휴일", "연차휴가", "공가", "교육(사내)", "교육(사외)", "출장(국내)", "출장(국외)"};
+    public final static String[] HolidayStatus = {"휴일", "휴무토요일", "공휴일", "연차휴가", "공가", "교육(사내)", "교육(사외)", "출장(국내)", "출장(국외)"};
+    public final static String[] NormalDayStatus = {"평일", "외근"};
     private DateTimeFormatter FULL_PATTERN = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
     private DateTimeFormatter TIME_PATTERN = DateTimeFormatter.ofPattern("HH:mm");
     private SimpleStringProperty index;
@@ -28,7 +29,7 @@ public class DayInfo {
     private Duration breakTimeDuration;
 
     public enum Element {
-        index(0), date(1), dayType(2), dayStatus(4), dayTypeTime(5), getTheWork(6), status(7), leaveTheWork(9), workTime(11);
+        index(0), date(1), dayType(2), dayStatus(11), dayTypeTime(99), getTheWork(7), status(14), leaveTheWork(8), workTime(6);
         private int order;
 
         Element(int order) {
@@ -48,7 +49,13 @@ public class DayInfo {
         String[] split = raw.split("\t");
         this.day = new SimpleStringProperty(split[Element.date.order]);
         for (Element element : Element.values()) {
-            setValue(element, split[element.order]);
+            String v;
+            if (element.order < split.length) {
+                v = split[element.order];
+            } else {
+                v = "";
+            }
+            setValue(element, v);
         }
         calculateWorkTime();
     }
@@ -102,7 +109,7 @@ public class DayInfo {
             if (isHalfRest())
                 workTimeDuration = workTimeDuration.plusHours(4);
             if (isExistDayTimeAndEquals("외근")) {
-                String raw = dayTypeTime.getValue();
+                String raw = dayTypeTime.getValue().length() == 0 ? "0:0" : dayTypeTime.getValue();
                 if (raw.contains("."))
                     raw = raw.replace(".", ":");
                 String[] v = raw.split(":");
@@ -215,7 +222,7 @@ public class DayInfo {
 
     public static String[] getDayStatusList() {
         List<String> v = new ArrayList<>();
-        v.add("평일");
+        v.addAll(Arrays.asList(NormalDayStatus));
         v.addAll(Arrays.asList(HolidayStatus));
         String[] r = new String[v.size()];
         v.toArray(r);
