@@ -29,7 +29,7 @@ public class DayInfo {
     private Duration breakTimeDuration;
 
     public enum Element {
-        index(0), date(1), dayType(2), dayStatus(11), dayTypeTime(99), getTheWork(7), status(14), leaveTheWork(8), workTime(6);
+        index(0), date(1), dayType(2),  workTime(4), getTheWork(5), leaveTheWork(6), dayStatus(9), status(12), dayTypeTime(99);
         private int order;
 
         Element(int order) {
@@ -122,10 +122,11 @@ public class DayInfo {
                 workTime.setValue("12.00(" + getCalculateTime() + ")");
                 workTimeDuration = Duration.ofHours(12);
             } else {
-                if (temp.minusMinutes(240).toMinutes() > 0) {
+                int t = (int) Duration.ofHours(4).toMinutes();
+                if (temp.minusMinutes(t).toMinutes() > 0) {
                     minusBreakTime(temp);
-                    temp = temp.minusMinutes(240);
-                    if (temp.minusMinutes(240).toMinutes() > 0) {
+                    temp = temp.minusMinutes(t);
+                    if (temp.minusMinutes(t).toMinutes() > 0) {
                         minusBreakTime(temp);
                     }
                 }
@@ -238,7 +239,7 @@ public class DayInfo {
     }
 
     public Duration getWorkTimeDuration() {
-        if (isToday() && (PreferenceController.getInstance() == null || PreferenceController.getInstance().getUseCurrentTime())) {
+        if (isToday() && (PreferenceController.getInstance() == null || PreferenceController.getInstance().useCurrentTime())) {
             setLeaveTheWork(LocalDateTime.now());
         }
         calculateWorkTime();

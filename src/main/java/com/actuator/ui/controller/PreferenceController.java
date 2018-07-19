@@ -17,6 +17,7 @@ public class PreferenceController implements Initializable {
     public TextField durationField;
     public CheckBox rotationCheckbox;
     public CheckBox useCurrentTime;
+    public CheckBox subtractBreakTime;
     private static PreferenceController instance;
 
     @Override
@@ -52,7 +53,11 @@ public class PreferenceController implements Initializable {
         return instance;
     }
 
-    public boolean getUseCurrentTime() {
+    public boolean useCurrentTime() {
         return useCurrentTime.isSelected();
+    }
+
+    public boolean subtractBreakTimeFirst() {
+        return subtractBreakTime.isSelected();
     }
 }

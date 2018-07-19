@@ -32,5 +32,6 @@
       <Separator layoutX="17.0" layoutY="124.0" prefHeight="3.0" prefWidth="120.0" />
       <Label layoutX="17.0" layoutY="107.0" text="Time" />
       <CheckBox fx:id="useCurrentTime" layoutX="17.0" layoutY="136.0" mnemonicParsing="false" selected="true" text="Calculate the time with today's current time" />
+      <CheckBox fx:id="subtractBreakTime" layoutX="17.0" layoutY="164.0" mnemonicParsing="false" text="subtract breaktime first" />
     </children>
 </AnchorPane>
